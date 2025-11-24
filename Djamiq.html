@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Джамия с. Лъжница | Духовен Център</title>
+    <meta name="description" content="Официален сайт на джамията в с. Лъжница. Времена за намаз, събития и новини.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d4af37; /* Gold */
+            --bg-overlay-start: rgba(6, 78, 59, 0.4);
+            --bg-overlay-end: rgba(212, 175, 55, 0.15);
+            --dark-bg: #0f172a;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, var(--bg-overlay-start) 0, transparent 50%),
+                radial-gradient(at 100% 100%, var(--bg-overlay-end) 0, transparent 50%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 2s ease, background-image 2s ease;
+        }
+
+        /* Themes Classes */
+        body.theme-night { --bg-overlay-start: rgba(15, 23, 42, 0.9); --bg-overlay-end: rgba(30, 27, 75, 0.5); }
+        body.theme-dawn { --bg-overlay-start: rgba(192, 38, 211, 0.3); --bg-overlay-end: rgba(234, 88, 12, 0.2); } /* Purple/Orange */
+        body.theme-day { --bg-overlay-start: rgba(6, 78, 59, 0.4); --bg-overlay-end: rgba(212, 175, 55, 0.15); } /* Green/Gold */
+
+        .font-arabic { font-family: 'Amiri', serif; }
+
+        .pattern-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: border-color 0.3s ease;
+        }
+
+        .btn-gold {
+            background: linear-gradient(45deg, #b38728, #d4af37);
+            color: #0f172a;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-gold:hover {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float-slow 8s ease-in-out infinite; }
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hidden-view { display: none !important; }
+        
+        .prayer-row.active {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), transparent);
+            border-left: 4px solid #d4af37;
+        }
+
+        /* Tasbih Animations */
+        @keyframes click-ripple {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.6);
+            animation: click-ripple 0.6s linear;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-left-color: #d4af37;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .donation-btn.selected {
+            background-color: #d4af37;
+            color: #0f172a;
+            border-color: #d4af37;
+        }
+
+        /* Compass */
+        .qibla-compass {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            position: relative;
+            background: rgba(0,0,0,0.3);
+        }
+        .qibla-needle {
+            width: 4px;
+            height: 26px;
+            background: #d4af37;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            margin-left: -2px;
+            margin-top: -26px;
+            border-radius: 2px;
+            transition: transform 1s ease-out;
+        }
+        .qibla-needle::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -4px;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 8px solid #d4af37;
+        }
+
+        /* AI FAB */
+        .ai-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #9333ea);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.5);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .ai-fab:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(147, 51, 234, 0.7);
+        }
+        .ai-message-bubble {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            font-size: 0.9rem;
+        }
+        .ai-message-bubble.user {
+            background: rgba(212, 175, 55, 0.2);
+            align-self: flex-end;
+            margin-left: auto;
+            text-align: right;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .ai-message-bubble.bot {
+            background: rgba(79, 70, 229, 0.2);
+            align-self: flex-start;
+            border: 1px solid rgba(79, 70, 229, 0.3);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen theme-day">
+
+    <div class="pattern-overlay"></div>
+
+    <!-- AUTH VIEW (PORTAL) -->
+    <div id="auth-view" class="flex-grow flex items-center justify-center p-4 relative z-50">
+        <div class="glass-panel p-8 md:p-12 rounded-2xl w-full max-w-md animate-fade-in shadow-2xl border-t-4 border-yellow-500 relative">
+            <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-[#0f172a] p-4 rounded-full border-2 border-[#d4af37] shadow-lg animate-float">
+                <i class="fas fa-mosque text-4xl text-[#d4af37]"></i>
+            </div>
+            <div class="text-center mt-8 mb-8">
+                <h2 class="text-sm font-arabic text-green-400 tracking-widest mb-2">БИСМИЛЛЯХИ РАХМАНИ РАХИМ</h2>
+                <h1 class="text-3xl font-extrabold text-white mb-2">Джамия с. Лъжница</h1>
+                <p class="text-gray-400 text-sm">Вход за общността и настоятелството</p>
+                <div id="system-status" class="mt-2 text-[10px] text-gray-500 font-mono">Система: Онлайн</div>
+            </div>
+            <div class="space-y-5">
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-4 top-3.5 text-gray-500"></i>
+                    <input type="email" id="auth-email" class="w-full bg-slate-800/50 border border-slate-600 rounded-lg py-3 pl-10 pr-4 text-white focus:border-[#d4af37] focus:outline-none transition" placeholder="admin@lazhnitsa.bg">
+                </div>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-4 top-3.5 text-gray-500"></i>
+                    <input type="password" id="auth-password" class="w-full bg-slate-800/50 border border-slate-600 rounded-lg py-3 pl-10 pr-4 text-white focus:border-[#d4af37] focus:outline-none transition" placeholder="••••••••">
+                </div>
+                <div id="auth-error" class="text-red-400 text-xs text-center hidden p-2 bg-red-900/20 rounded"></div>
+                <button id="btn-login" class="btn-gold w-full py-3 rounded-lg text-lg shadow-lg">Влез в Портала</button>
+                <div class="text-center text-xs text-gray-500 mt-4">
+                    <a href="#" id="btn-guest" class="text-[#d4af37] hover:underline">Продължи като гост</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP VIEW -->
+    <div id="app-view" class="hidden-view flex flex-col min-h-screen relative z-10">
+        
+        <!-- Navbar -->
+        <nav class="glass-panel border-b-0 border-t-0 rounded-none sticky top-0 z-40 bg-[#0f172a]/90">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full border border-[#d4af37] flex items-center justify-center bg-slate-900">
+                        <i class="fas fa-star-and-crescent text-[#d4af37]"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-none text-white">ЛЪЖНИЦА</h1>
+                        <span class="text-[10px] text-green-400 uppercase tracking-wider">Гоце Делчев</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 md:space-x-4">
+                    <button onclick="shareLink()" class="bg-[#064e3b] hover:bg-green-700 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-green-500 transition shadow-lg">
+                        <i class="fas fa-share-alt"></i> <span class="hidden md:inline">Сподели</span>
+                    </button>
+                    <span id="user-display" class="hidden md:block text-sm text-gray-400">Гост</span>
+                    <button id="btn-logout" class="text-gray-400 hover:text-white transition" title="Изход"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Grid -->
+        <main class="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- LEFT COLUMN: Prayer Times -->
+            <div class="lg:col-span-4 space-y-6">
+                <!-- Qibla Box (Ezan removed) -->
+                <div class="glass-panel p-4 rounded-2xl relative overflow-hidden group">
+                    <div class="flex justify-between items-center relative z-10">
+                        <div class="flex items-center gap-3">
+                            <!-- Qibla Compass -->
+                            <div class="qibla-compass" title="Посока към Мека (136°)">
+                                <div class="qibla-needle" style="transform: rotate(136deg);"></div>
+                                <div class="absolute inset-0 flex items-center justify-center text-[8px] text-gray-500 font-mono">N</div>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-white">Посока към Къбла</h3>
+                                <p class="text-[10px] text-gray-400">Къбла: 136° ЮИ</p>
+                            </div>
+                        </div>
+                        <div class="w-10 h-10"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl text-center relative overflow-hidden">
+                    <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Следващ Намаз</h3>
+                    <div class="text-4xl font-bold text-white mb-2" id="next-prayer-name">Зареждане...</div>
+                    <div class="text-xl text-[#d4af37] font-mono mb-4" id="countdown-timer">--:--:--</div>
+                    <div class="h-1 w-full bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-[#d4af37] w-[65%]"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-right" id="hijri-date">Хиджри дата...</p>
+                </div>
+
+                <div class="glass-panel p-0 rounded-2xl overflow-hidden">
+                    <div class="bg-[#064e3b]/40 p-3 text-center border-b border-white/10 flex justify-between px-4 items-center">
+                        <span class="font-bold text-white">Времена за днес</span>
+                        <div id="loading-indicator" class="loading-spinner hidden"></div>
+                    </div>
+                    <div class="p-4 space-y-1" id="prayer-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER/RIGHT: Content -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- COMMUNITY TASBIH -->
+                <div class="glass-panel p-8 rounded-2xl relative overflow-hidden border-2 border-[#d4af37]/30">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#d4af37] rounded-full blur-[100px] opacity-10 pointer-events-none"></div>
+                    
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div>
+                            <span class="bg-green-900/50 text-green-400 border border-green-500/30 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">
+                                <i class="fas fa-globe-europe mr-1"></i> Обединена Лъжница
+                            </span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Общ Зикр на Селото</h2>
+                            <p class="text-sm text-gray-400">Вашият принос се запазва в профила ви.</p>
+                        </div>
+                        
+                        <div class="text-right">
+                            <div class="text-[10px] text-gray-500 uppercase">Общ Брояч</div>
+                            <div class="text-4xl font-mono font-bold text-[#d4af37] tracking-wider" id="global-counter">0</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex flex-col items-center">
+                        <button id="btn-zikr" class="relative group w-32 h-32 rounded-full bg-gradient-to-br from-[#0f172a] to-[#064e3b] border-4 border-[#d4af37] shadow-[0_0_30px_rgba(212,175,55,0.2)] flex flex-col items-center justify-center transition active:scale-95 active:border-white">
+                            <i class="fas fa-fingerprint text-4xl text-gray-400 group-hover:text-white transition"></i>
+                            <span class="text-[10px] text-gray-500 mt-2 uppercase font-bold">Натисни</span>
+                            <div class="absolute inset-0 rounded-full border border-white/10"></div>
+                        </button>
+                        
+                        <div class="mt-4 flex gap-4 text-xs font-mono text-gray-500 items-center bg-slate-800/50 px-4 py-2 rounded-full border border-white/5">
+                            <span class="text-gray-400">Личен принос:</span>
+                            <strong class="text-[#d4af37] text-lg ml-1" id="user-counter">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-[#d4af37] font-bold text-sm uppercase">Хадис на деня</h3>
+                            <i class="fas fa-book-open text-gray-600"></i>
+                        </div>
+                        <blockquote class="text-lg text-gray-200 italic font-serif mb-4">
+                            "Нито един от вас не е вярващ, докато не желае за своя брат това, което желае за себе си."
+                        </blockquote>
+                    </div>
+
+                    <!-- Events Section with Dynamic Dates -->
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-green-400 font-bold text-sm uppercase">Събития</h3>
+                            <i class="fas fa-calendar-alt text-gray-600"></i>
+                        </div>
+                        <ul class="space-y-4" id="events-list">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Footer Banner: Lectures -->
+                <div class="relative rounded-2xl overflow-hidden h-48 shadow-2xl group">
+                    <img src="https://images.unsplash.com/photo-1544890656-98dfb9c03b1e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Lectures" class="w-full h-full object-cover opacity-60 transition duration-1000 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a] to-transparent"></div>
+                    <div class="absolute inset-0 flex items-center justify-start">
+                        <div class="p-8">
+                            <span class="bg-[#d4af37] text-black text-[10px] font-bold px-2 py-1 rounded uppercase mb-2 inline-block">Събота вечер</span>
+                            <h2 class="text-2xl font-bold text-white mb-2">Зимни Лекции</h2>
+                            <p class="text-sm text-gray-300 max-w-md">Всеки съботен ден след Ятсия намаз. Теми за семейството, морала и ислямските ценности.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: CONTACTS SECTION -->
+                <div class="glass-panel p-6 rounded-2xl border-t-4 border-blue-500">
+                    <h3 class="text-white font-bold text-lg mb-4 border-b border-white/10 pb-2">Контакти с Настоятелството</h3>
+                    <div class="flex flex-col md:flex-row gap-6 justify-around">
+                        <a href="mailto:djamiq.lazhnitsa@gmail.com" class="flex items-center gap-3 text-gray-300 hover:text-[#d4af37] transition group p-2 rounded hover:bg-white/5">
+                            <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-[#d4af37] group-hover:scale-110 transition">
+                                <i class="fas fa-envelope text-xl"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-gray-500 uppercase tracking-widest">Имейл</span>
+                                <span class="font-mono text-sm">djamiq.lazhnitsa@gmail.com</span>
+                            </div>
+                        </a>
+                        <a href="https://www.facebook.com/share/g/1FSJf694xM/?mibextid=wwXIfr" target="_blank" class="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition group p-2 rounded hover:bg-white/5">
+                            <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-blue-500 group-hover:scale-110 transition">
+                                <i class="fab fa-facebook-f text-xl"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-gray-500 uppercase tracking-widest">Facebook</span>
+                                <span class="font-bold text-sm">Официална Група</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- END CONTACTS -->
+
+                <div class="text-center pt-8 pb-4 border-t border-gray-800 mt-4">
+                    <p class="text-gray-500 text-sm">© 2025 Джамийско настоятелство с. Лъжница</p>
+                    <p class="text-xs text-gray-600 mt-1">В името на Аллах, Всемилостивия, Милосърдния</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- AI FAB (Floating Action Button) -->
+    <button id="ai-fab" class="ai-fab hidden-view" onclick="openModal('ai-assistant')">
+        <i class="fas fa-sparkles text-2xl"></i>
+    </button>
+
+    <!-- MODAL: Donation -->
+    <div id="modal-donate" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="glass-panel bg-[#0f172a] p-8 rounded-2xl w-full max-w-md relative mx-4">
+            <button onclick="closeModal('donate')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            <h2 class="text-2xl font-bold text-white mb-2 text-center">Направи Дарение</h2>
+            <p class="text-gray-400 text-sm text-center mb-6">Средствата подпомагат джамията и лекциите.</p>
+            
+            <div class="grid grid-cols-3 gap-3 mb-6 mt-4">
+                <button class="donation-btn py-2 rounded border border-gray-600 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition" data-amount="10">10 лв.</button>
+                <button class="donation-btn py-2 rounded border border-gray-600 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition" data-amount="20">20 лв.</button>
+                <button class="donation-btn py-2 rounded border border-gray-600 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition" data-amount="50">50 лв.</button>
+            </div>
+            
+            <input type="number" id="custom-donation-amount" placeholder="Друга сума (лв.)" class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-3 text-white mb-6 focus:border-[#d4af37] outline-none">
+            
+            <button id="btn-process-donation" class="btn-gold w-full py-3 rounded font-bold flex justify-center items-center gap-2">
+                <span>Дари сега</span>
+                <i class="fas fa-arrow-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: AI Assistant -->
+    <div id="modal-ai-assistant" class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="glass-panel bg-[#0f172a] rounded-2xl w-full max-w-lg h-[600px] flex flex-col relative border border-indigo-500/30 shadow-2xl overflow-hidden">
+            
+            <!-- Header -->
+            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-indigo-900/50 to-purple-900/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white">Духовен Асистент</h3>
+                        <p class="text-[10px] text-indigo-300">Powered by Gemini AI</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('ai-assistant')" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex border-b border-white/10">
+                <button onclick="switchAiTab('chat')" id="tab-btn-chat" class="flex-1 py-3 text-sm font-bold text-white border-b-2 border-indigo-500 bg-white/5">
+                    <i class="fas fa-comments mr-2"></i> Питай Имама
+                </button>
+                <button onclick="switchAiTab('dua')" id="tab-btn-dua" class="flex-1 py-3 text-sm font-bold text-gray-400 hover:text-white border-b-2 border-transparent">
+                    <i class="fas fa-hands-praying mr-2"></i> Генератор на Дуа
+                </button>
+            </div>
+
+            <!-- Content: Chat -->
+            <div id="ai-tab-chat" class="flex-grow flex flex-col overflow-hidden p-4">
+                <div id="chat-history" class="flex-grow overflow-y-auto space-y-3 mb-4 custom-scrollbar">
+                    <div class="ai-message-bubble bot">
+                        Селям Алейкум! Аз съм виртуалният помощник на джамията в Лъжница. С какво мога да ви помогна днес?
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" class="flex-grow bg-slate-800 border border-slate-600 rounded-full px-4 py-2 text-white text-sm focus:border-indigo-500 outline-none" placeholder="Задайте въпрос...">
+                    <button onclick="sendChatMessage()" id="btn-send-chat" class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-500 transition">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content: Dua -->
+            <div id="ai-tab-dua" class="flex-grow flex flex-col hidden p-6 overflow-y-auto">
+                <div class="text-center mb-6">
+                    <i class="fas fa-moon text-4xl text-yellow-500 mb-3 opacity-80"></i>
+                    <h3 class="text-xl font-bold text-white mb-1">Лична Молитва</h3>
+                    <p class="text-xs text-gray-400">Споделете какво ви тежи и AI ще състави дуа за вас.</p>
+                </div>
+                
+                <textarea id="dua-input" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white text-sm focus:border-yellow-500 outline-none mb-4 h-24" placeholder="Например: Предстои ми важен изпит... или Болен съм..."></textarea>
+                
+                <button onclick="generateDua()" id="btn-generate-dua" class="w-full py-3 rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold shadow-lg hover:brightness-110 transition mb-6 flex justify-center items-center gap-2">
+                    <span>✨ Генерирай Дуа</span>
+                </button>
+
+                <div id="dua-result" class="hidden p-4 bg-slate-800/50 border border-yellow-500/30 rounded-lg relative">
+                    <div class="absolute -top-3 -right-3">
+                        <i class="fas fa-quote-right text-2xl text-yellow-500 opacity-20"></i>
+                    </div>
+                    <p id="dua-text" class="text-sm text-gray-200 italic leading-relaxed mb-4"></p>
+                    <!-- Audio controls for TTS -->
+                    <div id="dua-audio-controls" class="flex justify-end pt-2 border-t border-white/5">
+                         <button onclick="playGeneratedDua()" id="btn-play-dua" class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-indigo-700 transition flex items-center gap-2 disabled:opacity-50" disabled>
+                            <i class="fas fa-volume-up"></i>
+                            <span id="dua-audio-text">Слушай Дуата</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-[#d4af37] text-black px-6 py-3 rounded-full shadow-2xl font-bold text-sm hidden z-[80] transition-all duration-300 translate-y-10 flex items-center gap-2">
+        <i class="fas fa-check-circle"></i> <span id="toast-message">Линкът е копиран!</span>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // --- AI LOGIC (GEMINI) ---
+        const apiKey = ""; // Inject Key Here
+
+        // Utility functions for audio conversion (PCM to WAV)
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        function pcmToWav(pcm16, sampleRate) {
+            const buffer = new ArrayBuffer(44 + pcm16.buffer.byteLength);
+            const view = new DataView(buffer);
+
+            /* RIFF identifier */
+            writeString(view, 0, 'RIFF');
+            /* file length */
+            view.setUint32(4, 36 + pcm16.buffer.byteLength, true);
+            /* RIFF type */
+            writeString(view, 8, 'WAVE');
+            /* format chunk identifier */
+            writeString(view, 12, 'fmt ');
+            /* format chunk length */
+            view.setUint32(16, 16, true);
+            /* sample format (1 for PCM) */
+            view.setUint16(20, 1, true);
+            /* channel count */
+            view.setUint16(22, 1, true); // Mono
+            /* sample rate */
+            view.setUint32(24, sampleRate, true);
+            /* byte rate (sample rate * block align) */
+            view.setUint32(28, sampleRate * 2, true);
+            /* block align (channels * bytes per sample) */
+            view.setUint16(32, 2, true); // 16-bit PCM = 2 bytes
+            /* bits per sample */
+            view.setUint16(34, 16, true); // 16-bit
+            /* data chunk identifier */
+            writeString(view, 36, 'data');
+            /* data chunk length */
+            view.setUint32(40, pcm16.buffer.byteLength, true);
+
+            // Write PCM data
+            const pcmDataView = new DataView(pcm16.buffer);
+            for (let i = 0; i < pcm16.length; i++) {
+                view.setInt16(44 + i * 2, pcmDataView.getInt16(i * 2, true), true);
+            }
+
+            return new Blob([view], { type: 'audio/wav' });
+        }
+        
+        let generatedDuaAudioUrl = null;
+
+        async function generateTtsAudio(text) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: `Прочети тържествено следната молитва на български: ${text}` }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            // Using the Kore voice for a firm, spiritual tone
+                            prebuiltVoiceConfig: { voiceName: "Kore" } 
+                        }
+                    }
+                }
+            };
+
+            const btn = document.getElementById('btn-play-dua');
+            const textEl = document.getElementById('dua-audio-text');
+            
+            btn.disabled = true;
+            textEl.innerText = 'Зареждане...';
+            if (generatedDuaAudioUrl) URL.revokeObjectURL(generatedDuaAudioUrl);
+            generatedDuaAudioUrl = null;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error('TTS API Error');
+
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+
+                if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                    const rateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000; 
+
+                    const pcmData = base64ToArrayBuffer(audioData);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    
+                    generatedDuaAudioUrl = URL.createObjectURL(wavBlob);
+                    
+                    textEl.innerText = 'Слушай Дуата';
+                    btn.disabled = false;
+                } else {
+                    throw new Error("Invalid audio response structure.");
+                }
+            } catch (error) {
+                console.error("TTS Error:", error);
+                textEl.innerText = 'Грешка при аудиото';
+                btn.disabled = true;
+            }
+        }
+
+        window.playGeneratedDua = () => {
+            if (generatedDuaAudioUrl) {
+                const audioEl = new Audio(generatedDuaAudioUrl);
+                const btn = document.getElementById('btn-play-dua');
+                const textEl = document.getElementById('dua-audio-text');
+                
+                btn.disabled = true;
+                textEl.innerText = 'Пускане...';
+                
+                audioEl.play();
+                
+                audioEl.onended = () => {
+                    btn.disabled = false;
+                    textEl.innerText = 'Слушай Дуата';
+                };
+                
+                audioEl.onerror = () => {
+                    btn.disabled = false;
+                    textEl.innerText = 'Грешка при пускане';
+                    console.error("Audio playback error.");
+                };
+            }
+        }
+        
+        window.switchAiTab = (tab) => {
+            const chatTab = document.getElementById('ai-tab-chat');
+            const duaTab = document.getElementById('ai-tab-dua');
+            const chatBtn = document.getElementById('tab-btn-chat');
+            const duaBtn = document.getElementById('tab-btn-dua');
+
+            if(tab === 'chat') {
+                chatTab.classList.remove('hidden');
+                duaTab.classList.add('hidden');
+                chatBtn.classList.add('text-white', 'border-indigo-500', 'bg-white/5');
+                chatBtn.classList.remove('text-gray-400', 'border-transparent');
+                duaBtn.classList.remove('text-white', 'border-indigo-500', 'bg-white/5');
+                duaBtn.classList.add('text-gray-400', 'border-transparent');
+            } else {
+                chatTab.classList.add('hidden');
+                duaTab.classList.remove('hidden');
+                duaBtn.classList.add('text-white', 'border-indigo-500', 'bg-white/5');
+                duaBtn.classList.remove('text-gray-400', 'border-transparent');
+                chatBtn.classList.remove('text-white', 'border-indigo-500', 'bg-white/5');
+                chatBtn.classList.add('text-gray-400', 'border-transparent');
+            }
+        }
+
+        async function callGemini(userPrompt, systemInstruction) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if(!response.ok) throw new Error('API Error');
+                
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Съжалявам, възникна грешка.";
+            } catch (error) {
+                console.error(error);
+                return "Моля проверете връзката си или опитайте по-късно.";
+            }
+        }
+
+        // Chat Logic
+        window.sendChatMessage = async () => {
+            const input = document.getElementById('chat-input');
+            const history = document.getElementById('chat-history');
+            const msg = input.value.trim();
+            
+            if(!msg) return;
+
+            // Add User Message
+            history.innerHTML += `<div class="ai-message-bubble user">${msg}</div>`;
+            input.value = '';
+            history.scrollTop = history.scrollHeight;
+
+            // Add Loading
+            const loadingId = 'loading-' + Date.now();
+            history.innerHTML += `<div id="${loadingId}" class="ai-message-bubble bot"><i class="fas fa-circle-notch fa-spin"></i></div>`;
+            history.scrollTop = history.scrollHeight;
+
+            const systemPrompt = "Ти си мъдър и знаещ помощник в джамията на село Лъжница, България. Отговаряй на въпроси за исляма, молитвата и общността с уважение, кратко и на български език. Използвай мек и насърчителен тон.";
+            const response = await callGemini(msg, systemPrompt);
+
+            // Remove Loading & Add Response
+            document.getElementById(loadingId).remove();
+            history.innerHTML += `<div class="ai-message-bubble bot">${response}</div>`;
+            history.scrollTop = history.scrollHeight;
+        };
+
+        // Dua Logic (Modified to include TTS)
+        window.generateDua = async () => {
+            const input = document.getElementById('dua-input');
+            const btn = document.getElementById('btn-generate-dua');
+            const resultBox = document.getElementById('dua-result');
+            const resultText = document.getElementById('dua-text');
+            const btnPlay = document.getElementById('btn-play-dua');
+            const topic = input.value.trim();
+
+            if(!topic) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Генериране...';
+            btnPlay.disabled = true;
+            resultBox.classList.add('hidden');
+
+            const systemPrompt = "Генерирай кратка, искрена ислямска молитва (Дуа) на български език за човек, който преживява следното. Включи транслитерация на подходяща арабска фраза, ако е уместно. Бъди съпричастен.";
+            const response = await callGemini(topic, systemPrompt);
+
+            btn.disabled = false;
+            btn.innerHTML = '<span>✨ Генерирай Дуа</span>';
+            
+            resultText.innerText = response;
+            resultBox.classList.remove('hidden');
+
+            // NEW: Generate TTS audio for the Dua
+            await generateTtsAudio(response);
+        };
+
+
+        // --- PRAYER TIMES & ATMOSPHERE ---
+        let prayerData = [];
+
+        async function fetchPrayerTimes() {
+            const loading = document.getElementById('loading-indicator');
+            const hijriEl = document.getElementById('hijri-date');
+            
+            if(loading) loading.classList.remove('hidden');
+
+            try {
+                const lat = 41.5766;
+                const lng = 23.7345;
+                const date = new Date();
+                // Using method 13: Muslim World League (Fajr 18, Isha 17) - common in Bulgaria/Turkey region
+                const url = `https://api.aladhan.com/v1/timings/${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if(data.code === 200) {
+                    const t = data.data.timings;
+                    const h = data.data.date.hijri;
+                    hijriEl.innerText = `${h.day} ${h.month.en} ${h.year} | ${data.data.date.readable}`;
+
+                    prayerData = [
+                        { name: "Имсак (Fajr)", time: t.Fajr, icon: "fa-cloud-sun" },
+                        { name: "Изгрев", time: t.Sunrise, icon: "fa-sun", isSun: true },
+                        { name: "Огле (Dhuhr)", time: t.Dhuhr, icon: "fa-sun" },
+                        { name: "Икиндѝ (Asr)", time: t.Asr, icon: "fa-cloud-sun" },
+                        { name: "Акшам (Maghrib)", time: t.Maghrib, icon: "fa-moon" },
+                        { name: "Ятсия (Isha)", time: t.Isha, icon: "fa-star" }
+                    ];
+
+                    renderPrayerTimes();
+                    updateAtmosphere(t);
+                }
+            } catch (error) {
+                console.error("API Error:", error);
+            } finally {
+                if(loading) loading.classList.add('hidden');
+            }
+        }
+
+        function renderPrayerTimes() {
+            const list = document.getElementById('prayer-list');
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            let nextFound = false;
+            let html = '';
+            
+            prayerData.forEach(p => {
+                const cleanTime = p.time.split(' ')[0]; 
+                const [h, m] = cleanTime.split(':').map(Number);
+                const isPast = (currentHours > h) || (currentHours === h && currentMinutes >= m);
+                let activeClass = '';
+                let statusIcon = '';
+
+                if (!nextFound && !isPast && !p.isSun) {
+                    activeClass = 'active';
+                    document.getElementById('next-prayer-name').innerText = p.name.split(' ')[0];
+                    nextFound = true;
+                    statusIcon = '<span class="text-[#d4af37] text-xs font-bold animate-pulse">СЛЕДВА</span>';
+                    
+                    window.targetPrayerTime = new Date();
+                    window.targetPrayerTime.setHours(h, m, 0);
+                }
+
+                html += `
+                    <div class="prayer-row ${activeClass} flex justify-between items-center p-3 rounded hover:bg-white/5 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fas ${p.icon} w-6 text-center text-gray-400"></i>
+                            <span class="${activeClass ? 'text-white font-bold' : 'text-gray-300'}">${p.name}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${statusIcon}
+                            <span class="font-mono text-gray-200">${cleanTime}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function updateAtmosphere(times) {
+            const now = new Date();
+            const curMins = now.getHours() * 60 + now.getMinutes();
+            
+            const parse = (t) => {
+                const [h, m] = t.split(':').map(Number);
+                return h * 60 + m;
+            };
+
+            const fajr = parse(times.Fajr);
+            const sunrise = parse(times.Sunrise);
+            const maghrib = parse(times.Maghrib);
+            const isha = parse(times.Isha);
+
+            const body = document.body;
+            body.classList.remove('theme-day', 'theme-night', 'theme-dawn');
+
+            if (curMins >= fajr && curMins < sunrise) {
+                body.classList.add('theme-dawn');
+            } else if (curMins >= sunrise && curMins < maghrib) {
+                body.classList.add('theme-day');
+            } else {
+                body.classList.add('theme-night');
+            }
+        }
+
+        // --- EVENTS LOGIC ---
+        function getNextDayOfWeek(date, dayOfWeek) {
+            const resultDate = new Date(date.getTime());
+            resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
+            return resultDate;
+        }
+
+        function renderEvents() {
+            const now = new Date();
+            const nextFriday = getNextDayOfWeek(now, 5);
+            const nextSaturday = getNextDayOfWeek(now, 6);
+            const format = (d) => `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}`;
+
+            const html = `
+                <li class="flex gap-3">
+                    <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded flex flex-col items-center justify-center border border-gray-700">
+                        <span class="text-xs text-gray-500">ПЕТ</span>
+                        <span class="font-bold text-white">${nextFriday.getDate()}</span>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">Джума Намаз</h4>
+                        <p class="text-xs text-gray-400">Дата: ${format(nextFriday)} • 13:30</p>
+                    </div>
+                </li>
+                <li class="flex gap-3">
+                    <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded flex flex-col items-center justify-center border border-gray-700">
+                        <span class="text-xs text-gray-500">СЪБ</span>
+                        <span class="font-bold text-white">${nextSaturday.getDate()}</span>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">Зимна Лекция</h4>
+                        <p class="text-xs text-gray-400">Дата: ${format(nextSaturday)} • След Ятсия</p>
+                    </div>
+                </li>
+            `;
+            document.getElementById('events-list').innerHTML = html;
+        }
+
+        // --- DONATION ---
+        let selectedAmount = 0;
+        document.querySelectorAll('.donation-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.donation-btn').forEach(b => b.classList.remove('selected'));
+                document.getElementById('custom-donation-amount').value = '';
+                e.target.classList.add('selected');
+                selectedAmount = parseInt(e.target.dataset.amount);
+            });
+        });
+
+        document.getElementById('custom-donation-amount').addEventListener('input', (e) => {
+            document.querySelectorAll('.donation-btn').forEach(b => b.classList.remove('selected'));
+            selectedAmount = parseInt(e.target.value) || 0;
+        });
+
+        document.getElementById('btn-process-donation').addEventListener('click', () => {
+            if (selectedAmount <= 0) {
+                // IMPORTANT: Removed alert() and used console log for non-critical flow
+                console.log("Моля, изберете сума за дарение.");
+                return;
+            }
+            const btn = document.getElementById('btn-process-donation');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="loading-spinner"></div>';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                closeModal('donate');
+                showToast(`Благодарим! Дарихте ${selectedAmount} лв.`);
+                selectedAmount = 0;
+            }, 1500);
+        });
+
+        // --- ZIKR ---
+        let currentUserId = 'guest';
+        let localCount = 0;
+        let communityCount = 0;
+
+        function loadUserZikr() {
+            const stored = localStorage.getItem('zikr_' + currentUserId);
+            localCount = stored ? parseInt(stored) : 0;
+            
+            // Simulate global sync via localstorage just for demo
+            const globalStored = localStorage.getItem('zikr_community_total');
+            communityCount = globalStored ? parseInt(globalStored) : 0;
+            
+            updateZikrDisplay();
+        }
+
+        function updateZikrDisplay() {
+            document.getElementById('user-counter').innerText = localCount;
+            document.getElementById('global-counter').innerText = communityCount.toLocaleString();
+        }
+
+        document.getElementById('btn-zikr').addEventListener('click', (e) => {
+            localCount++;
+            communityCount++; 
+            
+            localStorage.setItem('zikr_' + currentUserId, localCount);
+            localStorage.setItem('zikr_community_total', communityCount);
+            
+            updateZikrDisplay();
+
+            const circle = document.createElement('div');
+            circle.classList.add('ripple-effect');
+            circle.style.width = circle.style.height = '100px';
+            circle.style.left = (e.clientX - e.target.getBoundingClientRect().left - 50) + 'px';
+            circle.style.top = (e.clientY - e.target.getBoundingClientRect().top - 50) + 'px';
+            e.target.appendChild(circle);
+            setTimeout(() => circle.remove(), 600);
+        });
+
+        // --- AUTH & INIT ---
+        let auth = null;
+        let isMock = false;
+
+        try {
+            const configStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+            if (configStr) {
+                const app = initializeApp(JSON.parse(configStr));
+                auth = getAuth(app);
+            } else { throw new Error("No config"); }
+        } catch (e) {
+            isMock = true;
+            document.getElementById('system-status').innerText = "Система: Локален режим";
+        }
+
+        const views = { auth: document.getElementById('auth-view'), app: document.getElementById('app-view') };
+
+        function switchView(viewName) {
+            const aiFab = document.getElementById('ai-fab');
+            if(viewName === 'app') {
+                views.auth.classList.add('hidden-view');
+                views.app.classList.remove('hidden-view');
+                aiFab.classList.remove('hidden-view'); // Show AI FAB
+                fetchPrayerTimes();
+                loadUserZikr();
+                renderEvents();
+            } else {
+                views.app.classList.add('hidden-view');
+                views.auth.classList.remove('hidden-view');
+                aiFab.classList.add('hidden-view'); // Hide AI FAB
+            }
+        }
+
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'guest') {
+                currentUserId = 'guest_link';
+                switchView('app');
+                document.getElementById('user-display').innerText = "Гост (Линк)";
+            } else {
+                loadUserZikr();
+            }
+        });
+
+        window.shareLink = () => {
+            const baseUrl = window.location.href.split('?')[0];
+            const shareUrl = `${baseUrl}?mode=guest`;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).then(() => showToast("Линкът е копиран!"));
+            } else {
+                const input = document.createElement('input');
+                input.value = shareUrl;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast("Линкът е копиран!");
+            }
+        };
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden', 'translate-y-10');
+            setTimeout(() => {
+                toast.classList.add('translate-y-10');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3000);
+        }
+
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            if(isMock || (!email || !pass)) {
+                currentUserId = email || 'guest_mock';
+                setTimeout(() => switchView('app'), 500);
+            } else {
+                try { await signInWithEmailAndPassword(auth, email, pass); } 
+                catch(e) { alert("Грешка при вход: " + e.message); }
+            }
+        });
+
+        document.getElementById('btn-guest').addEventListener('click', (e) => {
+            e.preventDefault();
+            currentUserId = 'guest_manual';
+            switchView('app');
+            document.getElementById('user-display').innerText = "Гост";
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            if(auth) signOut(auth);
+            currentUserId = 'guest';
+            switchView('auth');
+            window.history.pushState({}, document.title, window.location.pathname);
+        });
+
+        if(auth) {
+            onAuthStateChanged(auth, (user) => {
+                if(user) {
+                    currentUserId = user.uid;
+                    switchView('app');
+                    document.getElementById('user-display').innerText = user.email.split('@')[0];
+                }
+            });
+        }
+
+        window.openModal = (id) => document.getElementById('modal-' + id).classList.remove('hidden');
+        window.closeModal = (id) => document.getElementById('modal-' + id).classList.add('hidden');
+
+        setInterval(() => {
+            if(window.targetPrayerTime) {
+                const now = new Date();
+                const diff = window.targetPrayerTime - now;
+                if(diff > 0) {
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+                    document.getElementById('countdown-timer').innerText = 
+                        `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                } else {
+                    document.getElementById('countdown-timer').innerText = "00:00:00";
+                    fetchPrayerTimes(); 
+                }
+            }
+        }, 1000);
+
+    </script>
+</body>
+</html>
