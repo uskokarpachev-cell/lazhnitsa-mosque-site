@@ -215,9 +215,10 @@
                     <input type="password" id="auth-password" class="w-full bg-slate-800/50 border border-slate-600 rounded-lg py-3 pl-10 pr-4 text-white focus:border-[#d4af37] focus:outline-none transition" placeholder="••••••••">
                 </div>
                 <div id="auth-error" class="text-red-400 text-xs text-center hidden p-2 bg-red-900/20 rounded"></div>
-                <button id="btn-login" class="btn-gold w-full py-3 rounded-lg text-lg shadow-lg">Влез в Портала</button>
+                <button id="btn-login" class="btn-gold w-full py-3 rounded-lg text-lg shadow-lg">Влез с Парола</button>
                 <div class="text-center text-xs text-gray-500 mt-4">
-                    <a href="#" id="btn-guest" class="text-[#d4af37] hover:underline">Продължи като гост</a>
+                     <span class="text-gray-600">или</span>
+                    <button id="btn-guest" class="text-[#d4af37] hover:underline font-bold ml-1">Влез като Гост</button>
                 </div>
             </div>
         </div>
@@ -253,7 +254,7 @@
 
             <!-- LEFT COLUMN: Prayer Times -->
             <div class="lg:col-span-4 space-y-6">
-                <!-- Qibla Box (Ezan removed) -->
+                <!-- Qibla Box -->
                 <div class="glass-panel p-4 rounded-2xl relative overflow-hidden group">
                     <div class="flex justify-between items-center relative z-10">
                         <div class="flex items-center gap-3">
@@ -295,7 +296,7 @@
             <!-- CENTER/RIGHT: Content -->
             <div class="lg:col-span-8 space-y-6">
                 
-                <!-- COMMUNITY TASBIH -->
+                <!-- COMMUNITY TASBIH (GLOBAL SYNC) -->
                 <div class="glass-panel p-8 rounded-2xl relative overflow-hidden border-2 border-[#d4af37]/30">
                     <div class="absolute top-0 right-0 w-64 h-64 bg-[#d4af37] rounded-full blur-[100px] opacity-10 pointer-events-none"></div>
                     
@@ -305,12 +306,12 @@
                                 <i class="fas fa-globe-europe mr-1"></i> Обединена Лъжница
                             </span>
                             <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Общ Зикр на Селото</h2>
-                            <p class="text-sm text-gray-400">Вашият принос се запазва в профила ви.</p>
+                            <p class="text-sm text-gray-400">Всеки клик се запазва в облака и е видим за всички.</p>
                         </div>
                         
                         <div class="text-right">
-                            <div class="text-[10px] text-gray-500 uppercase">Общ Брояч</div>
-                            <div class="text-4xl font-mono font-bold text-[#d4af37] tracking-wider" id="global-counter">0</div>
+                            <div class="text-[10px] text-gray-500 uppercase">Глобален Брояч</div>
+                            <div class="text-4xl font-mono font-bold text-[#d4af37] tracking-wider" id="global-counter">Свързване...</div>
                         </div>
                     </div>
 
@@ -322,7 +323,7 @@
                         </button>
                         
                         <div class="mt-4 flex gap-4 text-xs font-mono text-gray-500 items-center bg-slate-800/50 px-4 py-2 rounded-full border border-white/5">
-                            <span class="text-gray-400">Личен принос:</span>
+                            <span class="text-gray-400">Твоят личен принос:</span>
                             <strong class="text-[#d4af37] text-lg ml-1" id="user-counter">0</strong>
                         </div>
                     </div>
@@ -340,7 +341,7 @@
                         </blockquote>
                     </div>
 
-                    <!-- Events Section with Dynamic Dates -->
+                    <!-- Events Section -->
                     <div class="glass-panel p-6 rounded-2xl">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-green-400 font-bold text-sm uppercase">Събития</h3>
@@ -352,7 +353,7 @@
                     </div>
                 </div>
 
-                <!-- Footer Banner: Lectures -->
+                <!-- Footer Banner -->
                 <div class="relative rounded-2xl overflow-hidden h-48 shadow-2xl group">
                     <img src="https://images.unsplash.com/photo-1544890656-98dfb9c03b1e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Lectures" class="w-full h-full object-cover opacity-60 transition duration-1000 group-hover:opacity-80">
                     <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a] to-transparent"></div>
@@ -365,8 +366,8 @@
                     </div>
                 </div>
 
-                <!-- NEW: CONTACTS SECTION -->
-                <div class="glass-panel p-6 rounded-2xl border-t-4 border-blue-500">
+                <!-- CONTACTS SECTION -->
+                <div class="glass-panel p-6 rounded-2xl border-t-4 border-[#d4af37]">
                     <h3 class="text-white font-bold text-lg mb-4 border-b border-white/10 pb-2">Контакти с Настоятелството</h3>
                     <div class="flex flex-col md:flex-row gap-6 justify-around">
                         <a href="mailto:djamiq.lazhnitsa@gmail.com" class="flex items-center gap-3 text-gray-300 hover:text-[#d4af37] transition group p-2 rounded hover:bg-white/5">
@@ -389,7 +390,6 @@
                         </a>
                     </div>
                 </div>
-                <!-- END CONTACTS -->
 
                 <div class="text-center pt-8 pb-4 border-t border-gray-800 mt-4">
                     <p class="text-gray-500 text-sm">© 2025 Джамийско настоятелство с. Лъжница</p>
@@ -400,7 +400,7 @@
         </main>
     </div>
 
-    <!-- AI FAB (Floating Action Button) -->
+    <!-- AI FAB -->
     <button id="ai-fab" class="ai-fab hidden-view" onclick="openModal('ai-assistant')">
         <i class="fas fa-sparkles text-2xl"></i>
     </button>
@@ -411,15 +411,12 @@
             <button onclick="closeModal('donate')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
             <h2 class="text-2xl font-bold text-white mb-2 text-center">Направи Дарение</h2>
             <p class="text-gray-400 text-sm text-center mb-6">Средствата подпомагат джамията и лекциите.</p>
-            
             <div class="grid grid-cols-3 gap-3 mb-6 mt-4">
                 <button class="donation-btn py-2 rounded border border-gray-600 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition" data-amount="10">10 лв.</button>
                 <button class="donation-btn py-2 rounded border border-gray-600 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition" data-amount="20">20 лв.</button>
                 <button class="donation-btn py-2 rounded border border-gray-600 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition" data-amount="50">50 лв.</button>
             </div>
-            
             <input type="number" id="custom-donation-amount" placeholder="Друга сума (лв.)" class="w-full bg-slate-800 border border-slate-600 rounded px-4 py-3 text-white mb-6 focus:border-[#d4af37] outline-none">
-            
             <button id="btn-process-donation" class="btn-gold w-full py-3 rounded font-bold flex justify-center items-center gap-2">
                 <span>Дари сега</span>
                 <i class="fas fa-arrow-right text-xs"></i>
@@ -430,8 +427,6 @@
     <!-- MODAL: AI Assistant -->
     <div id="modal-ai-assistant" class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div class="glass-panel bg-[#0f172a] rounded-2xl w-full max-w-lg h-[600px] flex flex-col relative border border-indigo-500/30 shadow-2xl overflow-hidden">
-            
-            <!-- Header -->
             <div class="p-4 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-indigo-900/50 to-purple-900/50">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm">
@@ -444,8 +439,6 @@
                 </div>
                 <button onclick="closeModal('ai-assistant')" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
             </div>
-
-            <!-- Tabs -->
             <div class="flex border-b border-white/10">
                 <button onclick="switchAiTab('chat')" id="tab-btn-chat" class="flex-1 py-3 text-sm font-bold text-white border-b-2 border-indigo-500 bg-white/5">
                     <i class="fas fa-comments mr-2"></i> Питай Имама
@@ -454,12 +447,10 @@
                     <i class="fas fa-hands-praying mr-2"></i> Генератор на Дуа
                 </button>
             </div>
-
-            <!-- Content: Chat -->
             <div id="ai-tab-chat" class="flex-grow flex flex-col overflow-hidden p-4">
                 <div id="chat-history" class="flex-grow overflow-y-auto space-y-3 mb-4 custom-scrollbar">
                     <div class="ai-message-bubble bot">
-                        Селям Алейкум! Аз съм виртуалният помощник на джамията в Лъжница. С какво мога да ви помогна днес?
+                        Селям Алейкум! Аз съм виртуалният помощник. С какво мога да ви помогна днес?
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -469,27 +460,18 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Content: Dua -->
             <div id="ai-tab-dua" class="flex-grow flex flex-col hidden p-6 overflow-y-auto">
                 <div class="text-center mb-6">
                     <i class="fas fa-moon text-4xl text-yellow-500 mb-3 opacity-80"></i>
                     <h3 class="text-xl font-bold text-white mb-1">Лична Молитва</h3>
                     <p class="text-xs text-gray-400">Споделете какво ви тежи и AI ще състави дуа за вас.</p>
                 </div>
-                
                 <textarea id="dua-input" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white text-sm focus:border-yellow-500 outline-none mb-4 h-24" placeholder="Например: Предстои ми важен изпит... или Болен съм..."></textarea>
-                
                 <button onclick="generateDua()" id="btn-generate-dua" class="w-full py-3 rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold shadow-lg hover:brightness-110 transition mb-6 flex justify-center items-center gap-2">
                     <span>✨ Генерирай Дуа</span>
                 </button>
-
                 <div id="dua-result" class="hidden p-4 bg-slate-800/50 border border-yellow-500/30 rounded-lg relative">
-                    <div class="absolute -top-3 -right-3">
-                        <i class="fas fa-quote-right text-2xl text-yellow-500 opacity-20"></i>
-                    </div>
                     <p id="dua-text" class="text-sm text-gray-200 italic leading-relaxed mb-4"></p>
-                    <!-- Audio controls for TTS -->
                     <div id="dua-audio-controls" class="flex justify-end pt-2 border-t border-white/5">
                          <button onclick="playGeneratedDua()" id="btn-play-dua" class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-indigo-700 transition flex items-center gap-2 disabled:opacity-50" disabled>
                             <i class="fas fa-volume-up"></i>
@@ -498,7 +480,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     
@@ -510,152 +491,221 @@
     <!-- SCRIPTS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signInAnonymously, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            onSnapshot, 
+            setDoc, 
+            updateDoc, 
+            increment 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- FIREBASE CONFIG (USER PROVIDED) ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyBSorx-knS8Nziom3ewtCzXBTxrgMdsyHo",
+          authDomain: "lazhnitsa-mosque.firebaseapp.com",
+          projectId: "lazhnitsa-mosque",
+          storageBucket: "lazhnitsa-mosque.firebasestorage.app",
+          messagingSenderId: "305463312236",
+          appId: "1:305463312236:web:32c9942c7dd6e442b17d49",
+          measurementId: "G-9QSW6C0RLB"
+        };
 
         // --- AI LOGIC (GEMINI) ---
-        const apiKey = ""; // Inject Key Here
+        const apiKey = "AIzaSyB5KmaV8F9fZnMh0Qgcsz_byfGUatQUdlc"; // Added your Gemini API Key Here
 
-        // Utility functions for audio conversion (PCM to WAV)
+        // Init Firestore
+        let db;
+        let auth;
+        let isMockMode = false;
+        let appId_FS = "lazhnitsa-mosque"; // Set the App ID for firestore path
+        
+        try {
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase Online");
+        } catch (e) {
+            console.warn("Грешка при инициализация на Firebase:", e);
+            isMockMode = true;
+        }
+
+        // --- Global Counter Logic ---
+        let communityCount = 0;
+
+        function initGlobalCounter() {
+            if(isMockMode || !db) return;
+            
+            // PATH: /artifacts/{appId}/public/data/tasbih/global_counter
+            const docRef = doc(db, 'artifacts', appId_FS, 'public', 'data', 'tasbih', 'global_counter');
+            
+            onSnapshot(docRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    communityCount = data.count || 0;
+                    updateZikrDisplay();
+                }
+            }, (error) => {
+                console.error("Error listening to global counter:", error);
+            });
+        }
+        
+        async function incrementGlobalCounter() {
+            if(isMockMode || !db) return;
+            const docRef = doc(db, 'artifacts', appId_FS, 'public', 'data', 'tasbih', 'global_counter');
+            
+            // Guard: Auth required for write
+            if (!auth.currentUser) return;
+
+            try {
+                await updateDoc(docRef, { count: increment(1) });
+            } catch (e) {
+                await setDoc(docRef, { count: increment(1) }, { merge: true });
+            }
+        }
+
+        // --- ZIKR LOCAL LOGIC ---
+        let currentUserId = 'guest';
+        let localCount = 0;
+
+        function loadUserZikr() {
+            const stored = localStorage.getItem('zikr_' + currentUserId);
+            localCount = stored ? parseInt(stored) : 0;
+            updateZikrDisplay();
+        }
+
+        function updateZikrDisplay() {
+            document.getElementById('user-counter').innerText = localCount;
+            document.getElementById('global-counter').innerText = communityCount.toLocaleString();
+        }
+
+        document.getElementById('btn-zikr').addEventListener('click', (e) => {
+            localCount++;
+            localStorage.setItem('zikr_' + currentUserId, localCount);
+            
+            incrementGlobalCounter();
+            if(isMockMode) communityCount++;
+            
+            updateZikrDisplay();
+
+            const circle = document.createElement('div');
+            circle.classList.add('ripple-effect');
+            circle.style.width = circle.style.height = '100px';
+            circle.style.left = (e.clientX - e.target.getBoundingClientRect().left - 50) + 'px';
+            circle.style.top = (e.clientY - e.target.getBoundingClientRect().top - 50) + 'px';
+            e.target.appendChild(circle);
+            setTimeout(() => circle.remove(), 600);
+        });
+
+        // --- AUTH & AUTO LOGIN ---
+        const authView = document.getElementById('auth-view');
+        const appView = document.getElementById('app-view');
+        const userDisplay = document.getElementById('user-display');
+
+        function switchView(isLoggedIn, email = "Гост") {
+            if (isLoggedIn) {
+                authView.classList.add('hidden-view');
+                appView.classList.remove('hidden-view');
+                const aiFab = document.getElementById('ai-fab');
+                if (aiFab && apiKey) aiFab.classList.remove('hidden-view');
+                else if (aiFab) aiFab.classList.add('hidden-view');
+                
+                userDisplay.textContent = email.split('@')[0];
+                fetchPrayerTimes();
+                renderEvents();
+                loadUserZikr();
+                initGlobalCounter(); 
+            } else {
+                appView.classList.add('hidden-view');
+                authView.classList.remove('hidden-view');
+                const aiFab = document.getElementById('ai-fab');
+                if (aiFab) aiFab.classList.add('hidden-view');
+            }
+        }
+
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                    const displayName = user.isAnonymous ? "Гост" : user.email;
+                    switchView(true, displayName);
+                } else {
+                     // Auto login as guest if no user
+                    signInAnonymously(auth).catch((error) => {
+                         console.warn("Auto-guest login failed", error);
+                    });
+                }
+            });
+        }
+
+        async function handleAuthAction(actionType) {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+
+            if (actionType === 'guest') {
+                 if (isMockMode) {
+                    currentUserId = 'guest_manual';
+                    switchView(true, "Гост (Local)");
+                } else if (auth) {
+                    try { await signInAnonymously(auth); } 
+                    catch (error) { alert("Грешка при вход като гост."); }
+                }
+                return;
+            }
+
+            if (!email || !pass) { alert('Моля въведете имейл и парола.'); return; }
+
+            try {
+                if (isMockMode) {
+                    setTimeout(() => { currentUserId = email; switchView(true, email); }, 500);
+                } else {
+                     await signInWithEmailAndPassword(auth, email, pass);
+                }
+            } catch (error) { alert("Грешка при вход."); }
+        }
+
+        document.getElementById('btn-login').addEventListener('click', () => handleAuthAction('login'));
+        document.getElementById('btn-guest').addEventListener('click', (e) => { e.preventDefault(); handleAuthAction('guest'); });
+        document.getElementById('btn-logout').addEventListener('click', () => { if (isMockMode) switchView(false); else if (auth) signOut(auth); });
+
+        // --- UTILS (Audio, Prayer Times, Events) ---
         function base64ToArrayBuffer(base64) {
             const binaryString = atob(base64);
             const len = binaryString.length;
             const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
+            for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
             return bytes.buffer;
         }
-
         function writeString(view, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                view.setUint8(offset + i, string.charCodeAt(i));
-            }
+            for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
         }
-
         function pcmToWav(pcm16, sampleRate) {
             const buffer = new ArrayBuffer(44 + pcm16.buffer.byteLength);
             const view = new DataView(buffer);
-
-            /* RIFF identifier */
             writeString(view, 0, 'RIFF');
-            /* file length */
             view.setUint32(4, 36 + pcm16.buffer.byteLength, true);
-            /* RIFF type */
             writeString(view, 8, 'WAVE');
-            /* format chunk identifier */
             writeString(view, 12, 'fmt ');
-            /* format chunk length */
             view.setUint32(16, 16, true);
-            /* sample format (1 for PCM) */
             view.setUint16(20, 1, true);
-            /* channel count */
-            view.setUint16(22, 1, true); // Mono
-            /* sample rate */
+            view.setUint16(22, 1, true);
             view.setUint32(24, sampleRate, true);
-            /* byte rate (sample rate * block align) */
             view.setUint32(28, sampleRate * 2, true);
-            /* block align (channels * bytes per sample) */
-            view.setUint16(32, 2, true); // 16-bit PCM = 2 bytes
-            /* bits per sample */
-            view.setUint16(34, 16, true); // 16-bit
-            /* data chunk identifier */
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
             writeString(view, 36, 'data');
-            /* data chunk length */
             view.setUint32(40, pcm16.buffer.byteLength, true);
-
-            // Write PCM data
             const pcmDataView = new DataView(pcm16.buffer);
-            for (let i = 0; i < pcm16.length; i++) {
-                view.setInt16(44 + i * 2, pcmDataView.getInt16(i * 2, true), true);
-            }
-
+            for (let i = 0; i < pcm16.length; i++) view.setInt16(44 + i * 2, pcmDataView.getInt16(i * 2, true), true);
             return new Blob([view], { type: 'audio/wav' });
-        }
-        
-        let generatedDuaAudioUrl = null;
-
-        async function generateTtsAudio(text) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: `Прочети тържествено следната молитва на български: ${text}` }] }],
-                generationConfig: {
-                    responseModalities: ["AUDIO"],
-                    speechConfig: {
-                        voiceConfig: {
-                            // Using the Kore voice for a firm, spiritual tone
-                            prebuiltVoiceConfig: { voiceName: "Kore" } 
-                        }
-                    }
-                }
-            };
-
-            const btn = document.getElementById('btn-play-dua');
-            const textEl = document.getElementById('dua-audio-text');
-            
-            btn.disabled = true;
-            textEl.innerText = 'Зареждане...';
-            if (generatedDuaAudioUrl) URL.revokeObjectURL(generatedDuaAudioUrl);
-            generatedDuaAudioUrl = null;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) throw new Error('TTS API Error');
-
-                const result = await response.json();
-                const part = result?.candidates?.[0]?.content?.parts?.[0];
-                const audioData = part?.inlineData?.data;
-                const mimeType = part?.inlineData?.mimeType;
-
-                if (audioData && mimeType && mimeType.startsWith("audio/")) {
-                    const rateMatch = mimeType.match(/rate=(\d+)/);
-                    const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000; 
-
-                    const pcmData = base64ToArrayBuffer(audioData);
-                    const pcm16 = new Int16Array(pcmData);
-                    const wavBlob = pcmToWav(pcm16, sampleRate);
-                    
-                    generatedDuaAudioUrl = URL.createObjectURL(wavBlob);
-                    
-                    textEl.innerText = 'Слушай Дуата';
-                    btn.disabled = false;
-                } else {
-                    throw new Error("Invalid audio response structure.");
-                }
-            } catch (error) {
-                console.error("TTS Error:", error);
-                textEl.innerText = 'Грешка при аудиото';
-                btn.disabled = true;
-            }
-        }
-
-        window.playGeneratedDua = () => {
-            if (generatedDuaAudioUrl) {
-                const audioEl = new Audio(generatedDuaAudioUrl);
-                const btn = document.getElementById('btn-play-dua');
-                const textEl = document.getElementById('dua-audio-text');
-                
-                btn.disabled = true;
-                textEl.innerText = 'Пускане...';
-                
-                audioEl.play();
-                
-                audioEl.onended = () => {
-                    btn.disabled = false;
-                    textEl.innerText = 'Слушай Дуата';
-                };
-                
-                audioEl.onerror = () => {
-                    btn.disabled = false;
-                    textEl.innerText = 'Грешка при пускане';
-                    console.error("Audio playback error.");
-                };
-            }
         }
         
         window.switchAiTab = (tab) => {
@@ -663,229 +713,45 @@
             const duaTab = document.getElementById('ai-tab-dua');
             const chatBtn = document.getElementById('tab-btn-chat');
             const duaBtn = document.getElementById('tab-btn-dua');
-
             if(tab === 'chat') {
-                chatTab.classList.remove('hidden');
-                duaTab.classList.add('hidden');
-                chatBtn.classList.add('text-white', 'border-indigo-500', 'bg-white/5');
-                chatBtn.classList.remove('text-gray-400', 'border-transparent');
-                duaBtn.classList.remove('text-white', 'border-indigo-500', 'bg-white/5');
-                duaBtn.classList.add('text-gray-400', 'border-transparent');
+                chatTab.classList.remove('hidden'); duaTab.classList.add('hidden');
+                chatBtn.classList.add('text-white', 'border-indigo-500', 'bg-white/5'); chatBtn.classList.remove('text-gray-400', 'border-transparent');
+                duaBtn.classList.remove('text-white', 'border-indigo-500', 'bg-white/5'); duaBtn.classList.add('text-gray-400', 'border-transparent');
             } else {
-                chatTab.classList.add('hidden');
-                duaTab.classList.remove('hidden');
-                duaBtn.classList.add('text-white', 'border-indigo-500', 'bg-white/5');
-                duaBtn.classList.remove('text-gray-400', 'border-transparent');
-                chatBtn.classList.remove('text-white', 'border-indigo-500', 'bg-white/5');
-                chatBtn.classList.add('text-gray-400', 'border-transparent');
+                chatTab.classList.add('hidden'); duaTab.classList.remove('hidden');
+                duaBtn.classList.add('text-white', 'border-indigo-500', 'bg-white/5'); duaBtn.classList.remove('text-gray-400', 'border-transparent');
+                chatBtn.classList.remove('text-white', 'border-indigo-500', 'bg-white/5'); chatBtn.classList.add('text-gray-400', 'border-transparent');
             }
         }
 
-        async function callGemini(userPrompt, systemInstruction) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemInstruction }] }
-            };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if(!response.ok) throw new Error('API Error');
-                
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Съжалявам, възникна грешка.";
-            } catch (error) {
-                console.error(error);
-                return "Моля проверете връзката си или опитайте по-късно.";
+        window.openModal = (id) => document.getElementById('modal-' + id).classList.remove('hidden');
+        window.closeModal = (id) => document.getElementById('modal-' + id).classList.add('hidden');
+        window.shareLink = () => {
+            const baseUrl = window.location.href.split('?')[0];
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(baseUrl).then(() => showToast("Линкът е копиран!"));
             }
-        }
-
-        // Chat Logic
-        window.sendChatMessage = async () => {
-            const input = document.getElementById('chat-input');
-            const history = document.getElementById('chat-history');
-            const msg = input.value.trim();
-            
-            if(!msg) return;
-
-            // Add User Message
-            history.innerHTML += `<div class="ai-message-bubble user">${msg}</div>`;
-            input.value = '';
-            history.scrollTop = history.scrollHeight;
-
-            // Add Loading
-            const loadingId = 'loading-' + Date.now();
-            history.innerHTML += `<div id="${loadingId}" class="ai-message-bubble bot"><i class="fas fa-circle-notch fa-spin"></i></div>`;
-            history.scrollTop = history.scrollHeight;
-
-            const systemPrompt = "Ти си мъдър и знаещ помощник в джамията на село Лъжница, България. Отговаряй на въпроси за исляма, молитвата и общността с уважение, кратко и на български език. Използвай мек и насърчителен тон.";
-            const response = await callGemini(msg, systemPrompt);
-
-            // Remove Loading & Add Response
-            document.getElementById(loadingId).remove();
-            history.innerHTML += `<div class="ai-message-bubble bot">${response}</div>`;
-            history.scrollTop = history.scrollHeight;
         };
-
-        // Dua Logic (Modified to include TTS)
-        window.generateDua = async () => {
-            const input = document.getElementById('dua-input');
-            const btn = document.getElementById('btn-generate-dua');
-            const resultBox = document.getElementById('dua-result');
-            const resultText = document.getElementById('dua-text');
-            const btnPlay = document.getElementById('btn-play-dua');
-            const topic = input.value.trim();
-
-            if(!topic) return;
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Генериране...';
-            btnPlay.disabled = true;
-            resultBox.classList.add('hidden');
-
-            const systemPrompt = "Генерирай кратка, искрена ислямска молитва (Дуа) на български език за човек, който преживява следното. Включи транслитерация на подходяща арабска фраза, ако е уместно. Бъди съпричастен.";
-            const response = await callGemini(topic, systemPrompt);
-
-            btn.disabled = false;
-            btn.innerHTML = '<span>✨ Генерирай Дуа</span>';
-            
-            resultText.innerText = response;
-            resultBox.classList.remove('hidden');
-
-            // NEW: Generate TTS audio for the Dua
-            await generateTtsAudio(response);
-        };
-
-
-        // --- PRAYER TIMES & ATMOSPHERE ---
-        let prayerData = [];
-
-        async function fetchPrayerTimes() {
-            const loading = document.getElementById('loading-indicator');
-            const hijriEl = document.getElementById('hijri-date');
-            
-            if(loading) loading.classList.remove('hidden');
-
-            try {
-                const lat = 41.5766;
-                const lng = 23.7345;
-                const date = new Date();
-                // Using method 13: Muslim World League (Fajr 18, Isha 17) - common in Bulgaria/Turkey region
-                const url = `https://api.aladhan.com/v1/timings/${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13`;
-
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if(data.code === 200) {
-                    const t = data.data.timings;
-                    const h = data.data.date.hijri;
-                    hijriEl.innerText = `${h.day} ${h.month.en} ${h.year} | ${data.data.date.readable}`;
-
-                    prayerData = [
-                        { name: "Имсак (Fajr)", time: t.Fajr, icon: "fa-cloud-sun" },
-                        { name: "Изгрев", time: t.Sunrise, icon: "fa-sun", isSun: true },
-                        { name: "Огле (Dhuhr)", time: t.Dhuhr, icon: "fa-sun" },
-                        { name: "Икиндѝ (Asr)", time: t.Asr, icon: "fa-cloud-sun" },
-                        { name: "Акшам (Maghrib)", time: t.Maghrib, icon: "fa-moon" },
-                        { name: "Ятсия (Isha)", time: t.Isha, icon: "fa-star" }
-                    ];
-
-                    renderPrayerTimes();
-                    updateAtmosphere(t);
-                }
-            } catch (error) {
-                console.error("API Error:", error);
-            } finally {
-                if(loading) loading.classList.add('hidden');
-            }
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden', 'translate-y-10');
+            setTimeout(() => {
+                toast.classList.add('translate-y-10');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3000);
         }
 
-        function renderPrayerTimes() {
-            const list = document.getElementById('prayer-list');
-            const now = new Date();
-            const currentHours = now.getHours();
-            const currentMinutes = now.getMinutes();
-            let nextFound = false;
-            let html = '';
-            
-            prayerData.forEach(p => {
-                const cleanTime = p.time.split(' ')[0]; 
-                const [h, m] = cleanTime.split(':').map(Number);
-                const isPast = (currentHours > h) || (currentHours === h && currentMinutes >= m);
-                let activeClass = '';
-                let statusIcon = '';
-
-                if (!nextFound && !isPast && !p.isSun) {
-                    activeClass = 'active';
-                    document.getElementById('next-prayer-name').innerText = p.name.split(' ')[0];
-                    nextFound = true;
-                    statusIcon = '<span class="text-[#d4af37] text-xs font-bold animate-pulse">СЛЕДВА</span>';
-                    
-                    window.targetPrayerTime = new Date();
-                    window.targetPrayerTime.setHours(h, m, 0);
-                }
-
-                html += `
-                    <div class="prayer-row ${activeClass} flex justify-between items-center p-3 rounded hover:bg-white/5 transition">
-                        <div class="flex items-center gap-3">
-                            <i class="fas ${p.icon} w-6 text-center text-gray-400"></i>
-                            <span class="${activeClass ? 'text-white font-bold' : 'text-gray-300'}">${p.name}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            ${statusIcon}
-                            <span class="font-mono text-gray-200">${cleanTime}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            list.innerHTML = html;
-        }
-
-        function updateAtmosphere(times) {
-            const now = new Date();
-            const curMins = now.getHours() * 60 + now.getMinutes();
-            
-            const parse = (t) => {
-                const [h, m] = t.split(':').map(Number);
-                return h * 60 + m;
-            };
-
-            const fajr = parse(times.Fajr);
-            const sunrise = parse(times.Sunrise);
-            const maghrib = parse(times.Maghrib);
-            const isha = parse(times.Isha);
-
-            const body = document.body;
-            body.classList.remove('theme-day', 'theme-night', 'theme-dawn');
-
-            if (curMins >= fajr && curMins < sunrise) {
-                body.classList.add('theme-dawn');
-            } else if (curMins >= sunrise && curMins < maghrib) {
-                body.classList.add('theme-day');
-            } else {
-                body.classList.add('theme-night');
-            }
-        }
-
-        // --- EVENTS LOGIC ---
         function getNextDayOfWeek(date, dayOfWeek) {
             const resultDate = new Date(date.getTime());
             resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
             return resultDate;
         }
-
         function renderEvents() {
             const now = new Date();
             const nextFriday = getNextDayOfWeek(now, 5);
             const nextSaturday = getNextDayOfWeek(now, 6);
             const format = (d) => `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}`;
-
             const html = `
                 <li class="flex gap-3">
                     <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded flex flex-col items-center justify-center border border-gray-700">
@@ -910,189 +776,6 @@
             `;
             document.getElementById('events-list').innerHTML = html;
         }
-
-        // --- DONATION ---
-        let selectedAmount = 0;
-        document.querySelectorAll('.donation-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.donation-btn').forEach(b => b.classList.remove('selected'));
-                document.getElementById('custom-donation-amount').value = '';
-                e.target.classList.add('selected');
-                selectedAmount = parseInt(e.target.dataset.amount);
-            });
-        });
-
-        document.getElementById('custom-donation-amount').addEventListener('input', (e) => {
-            document.querySelectorAll('.donation-btn').forEach(b => b.classList.remove('selected'));
-            selectedAmount = parseInt(e.target.value) || 0;
-        });
-
-        document.getElementById('btn-process-donation').addEventListener('click', () => {
-            if (selectedAmount <= 0) {
-                // IMPORTANT: Removed alert() and used console log for non-critical flow
-                console.log("Моля, изберете сума за дарение.");
-                return;
-            }
-            const btn = document.getElementById('btn-process-donation');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<div class="loading-spinner"></div>';
-            btn.disabled = true;
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                closeModal('donate');
-                showToast(`Благодарим! Дарихте ${selectedAmount} лв.`);
-                selectedAmount = 0;
-            }, 1500);
-        });
-
-        // --- ZIKR ---
-        let currentUserId = 'guest';
-        let localCount = 0;
-        let communityCount = 0;
-
-        function loadUserZikr() {
-            const stored = localStorage.getItem('zikr_' + currentUserId);
-            localCount = stored ? parseInt(stored) : 0;
-            
-            // Simulate global sync via localstorage just for demo
-            const globalStored = localStorage.getItem('zikr_community_total');
-            communityCount = globalStored ? parseInt(globalStored) : 0;
-            
-            updateZikrDisplay();
-        }
-
-        function updateZikrDisplay() {
-            document.getElementById('user-counter').innerText = localCount;
-            document.getElementById('global-counter').innerText = communityCount.toLocaleString();
-        }
-
-        document.getElementById('btn-zikr').addEventListener('click', (e) => {
-            localCount++;
-            communityCount++; 
-            
-            localStorage.setItem('zikr_' + currentUserId, localCount);
-            localStorage.setItem('zikr_community_total', communityCount);
-            
-            updateZikrDisplay();
-
-            const circle = document.createElement('div');
-            circle.classList.add('ripple-effect');
-            circle.style.width = circle.style.height = '100px';
-            circle.style.left = (e.clientX - e.target.getBoundingClientRect().left - 50) + 'px';
-            circle.style.top = (e.clientY - e.target.getBoundingClientRect().top - 50) + 'px';
-            e.target.appendChild(circle);
-            setTimeout(() => circle.remove(), 600);
-        });
-
-        // --- AUTH & INIT ---
-        let auth = null;
-        let isMock = false;
-
-        try {
-            const configStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
-            if (configStr) {
-                const app = initializeApp(JSON.parse(configStr));
-                auth = getAuth(app);
-            } else { throw new Error("No config"); }
-        } catch (e) {
-            isMock = true;
-            document.getElementById('system-status').innerText = "Система: Локален режим";
-        }
-
-        const views = { auth: document.getElementById('auth-view'), app: document.getElementById('app-view') };
-
-        function switchView(viewName) {
-            const aiFab = document.getElementById('ai-fab');
-            if(viewName === 'app') {
-                views.auth.classList.add('hidden-view');
-                views.app.classList.remove('hidden-view');
-                aiFab.classList.remove('hidden-view'); // Show AI FAB
-                fetchPrayerTimes();
-                loadUserZikr();
-                renderEvents();
-            } else {
-                views.app.classList.add('hidden-view');
-                views.auth.classList.remove('hidden-view');
-                aiFab.classList.add('hidden-view'); // Hide AI FAB
-            }
-        }
-
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('mode') === 'guest') {
-                currentUserId = 'guest_link';
-                switchView('app');
-                document.getElementById('user-display').innerText = "Гост (Линк)";
-            } else {
-                loadUserZikr();
-            }
-        });
-
-        window.shareLink = () => {
-            const baseUrl = window.location.href.split('?')[0];
-            const shareUrl = `${baseUrl}?mode=guest`;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(shareUrl).then(() => showToast("Линкът е копиран!"));
-            } else {
-                const input = document.createElement('input');
-                input.value = shareUrl;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand('copy');
-                document.body.removeChild(input);
-                showToast("Линкът е копиран!");
-            }
-        };
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('hidden', 'translate-y-10');
-            setTimeout(() => {
-                toast.classList.add('translate-y-10');
-                setTimeout(() => toast.classList.add('hidden'), 300);
-            }, 3000);
-        }
-
-        document.getElementById('btn-login').addEventListener('click', async () => {
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-password').value;
-            if(isMock || (!email || !pass)) {
-                currentUserId = email || 'guest_mock';
-                setTimeout(() => switchView('app'), 500);
-            } else {
-                try { await signInWithEmailAndPassword(auth, email, pass); } 
-                catch(e) { alert("Грешка при вход: " + e.message); }
-            }
-        });
-
-        document.getElementById('btn-guest').addEventListener('click', (e) => {
-            e.preventDefault();
-            currentUserId = 'guest_manual';
-            switchView('app');
-            document.getElementById('user-display').innerText = "Гост";
-        });
-
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            if(auth) signOut(auth);
-            currentUserId = 'guest';
-            switchView('auth');
-            window.history.pushState({}, document.title, window.location.pathname);
-        });
-
-        if(auth) {
-            onAuthStateChanged(auth, (user) => {
-                if(user) {
-                    currentUserId = user.uid;
-                    switchView('app');
-                    document.getElementById('user-display').innerText = user.email.split('@')[0];
-                }
-            });
-        }
-
-        window.openModal = (id) => document.getElementById('modal-' + id).classList.remove('hidden');
-        window.closeModal = (id) => document.getElementById('modal-' + id).classList.add('hidden');
 
         setInterval(() => {
             if(window.targetPrayerTime) {
