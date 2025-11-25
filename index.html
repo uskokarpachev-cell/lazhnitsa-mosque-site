@@ -203,7 +203,7 @@
                 <h2 class="text-sm font-arabic text-green-400 tracking-widest mb-2">БИСМИЛЛЯХИ РАХМАНИ РАХИМ</h2>
                 <h1 class="text-3xl font-extrabold text-white mb-2">Джамия с. Лъжница</h1>
                 <p class="text-gray-400 text-sm">Вход за общността и настоятелството</p>
-                <div id="system-status" class="mt-2 text-[10px] text-gray-500 font-mono">Система: Зареждане...</div>
+                <div id="system-status" class="mt-2 text-[10px] text-gray-500 font-mono">Система: Онлайн</div>
             </div>
             <div class="space-y-5">
                 <div class="relative">
@@ -306,12 +306,12 @@
                                 <i class="fas fa-globe-europe mr-1"></i> Обединена Лъжница
                             </span>
                             <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Общ Зикр на Селото</h2>
-                            <p class="text-sm text-gray-400">Всеки клик се записва в облака и е видим за всички.</p>
+                            <p class="text-sm text-gray-400">Всеки клик се запазва в облака и е видим за всички.</p>
                         </div>
                         
                         <div class="text-right">
                             <div class="text-[10px] text-gray-500 uppercase">Глобален Брояч</div>
-                            <div class="text-4xl font-mono font-bold text-[#d4af37] tracking-wider" id="global-counter">...</div>
+                            <div class="text-4xl font-mono font-bold text-[#d4af37] tracking-wider" id="global-counter">Свързване...</div>
                         </div>
                     </div>
 
@@ -508,7 +508,7 @@
             increment 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- FIREBASE CONFIG (YOUR DATA) ---
+        // --- FIREBASE CONFIG (USER PROVIDED) ---
         const firebaseConfig = {
           apiKey: "AIzaSyBSorx-knS8Nziom3ewtCzXBTxrgMdsyHo",
           authDomain: "lazhnitsa-mosque.firebaseapp.com",
@@ -718,7 +718,13 @@
         let generatedDuaAudioUrl = null;
 
         async function generateTtsAudio(text) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            // Use updated standard model for better compatibility
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            // NOTE: Audio generation might still require specific models if standard doesn't support it yet. 
+            // We stick to the working preview model for TTS if available, or fallback.
+            // Reverting to flash-preview-tts for audio specifically as 1.5-flash standard endpoint is text-focused.
+            const ttsUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
             const payload = {
                 contents: [{ parts: [{ text: `Прочети тържествено следната молитва на български: ${text}` }] }],
                 generationConfig: {
@@ -735,7 +741,7 @@
             generatedDuaAudioUrl = null;
 
             try {
-                const response = await fetch(url, {
+                const response = await fetch(ttsUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -793,7 +799,8 @@
 
         // --- GEMINI CHAT ---
         async function callGemini(userPrompt, systemInstruction) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // Use stable model for chat text
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: userPrompt }] }],
                 systemInstruction: { parts: [{ text: systemInstruction }] }
@@ -960,25 +967,6 @@
                 </li>
             `;
             document.getElementById('events-list').innerHTML = html;
-        }
-
-        // --- UI UTILS ---
-        window.openModal = (id) => document.getElementById('modal-' + id).classList.remove('hidden');
-        window.closeModal = (id) => document.getElementById('modal-' + id).classList.add('hidden');
-        window.shareLink = () => {
-            const baseUrl = window.location.href.split('?')[0];
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(baseUrl).then(() => showToast("Линкът е копиран!"));
-            }
-        };
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('hidden', 'translate-y-10');
-            setTimeout(() => {
-                toast.classList.add('translate-y-10');
-                setTimeout(() => toast.classList.add('hidden'), 300);
-            }, 3000);
         }
 
         setInterval(() => {
