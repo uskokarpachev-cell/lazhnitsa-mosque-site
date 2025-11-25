@@ -203,7 +203,7 @@
                 <h2 class="text-sm font-arabic text-green-400 tracking-widest mb-2">БИСМИЛЛЯХИ РАХМАНИ РАХИМ</h2>
                 <h1 class="text-3xl font-extrabold text-white mb-2">Джамия с. Лъжница</h1>
                 <p class="text-gray-400 text-sm">Вход за общността и настоятелството</p>
-                <div id="system-status" class="mt-2 text-[10px] text-gray-500 font-mono">Система: Онлайн</div>
+                <div id="system-status" class="mt-2 text-[10px] text-gray-500 font-mono">Система: Зареждане...</div>
             </div>
             <div class="space-y-5">
                 <div class="relative">
@@ -306,12 +306,12 @@
                                 <i class="fas fa-globe-europe mr-1"></i> Обединена Лъжница
                             </span>
                             <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Общ Зикр на Селото</h2>
-                            <p class="text-sm text-gray-400">Всеки клик се запазва в облака и е видим за всички.</p>
+                            <p class="text-sm text-gray-400">Всеки клик се записва в облака и е видим за всички.</p>
                         </div>
                         
                         <div class="text-right">
                             <div class="text-[10px] text-gray-500 uppercase">Глобален Брояч</div>
-                            <div class="text-4xl font-mono font-bold text-[#d4af37] tracking-wider" id="global-counter">Свързване...</div>
+                            <div class="text-4xl font-mono font-bold text-[#d4af37] tracking-wider" id="global-counter">...</div>
                         </div>
                     </div>
 
@@ -508,7 +508,7 @@
             increment 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- FIREBASE CONFIG ---
+        // --- FIREBASE CONFIG (YOUR DATA) ---
         const firebaseConfig = {
           apiKey: "AIzaSyBSorx-knS8Nziom3ewtCzXBTxrgMdsyHo",
           authDomain: "lazhnitsa-mosque.firebaseapp.com",
@@ -519,14 +519,15 @@
           measurementId: "G-9QSW6C0RLB"
         };
 
-        // --- AI LOGIC (GEMINI) ---
+        // --- AI LOGIC (GEMINI - YOUR KEY) ---
         const apiKey = "AIzaSyB5KmaV8F9fZnMh0Qgcsz_byfGUatQUdlc"; 
 
         // Init Firestore
         let db;
         let auth;
         let isMockMode = false;
-        let appId_FS = "lazhnitsa-mosque"; 
+        // STRICT PATH: App ID from user input or config
+        const appId = "lazhnitsa-mosque"; 
         
         try {
             const app = initializeApp(firebaseConfig);
@@ -534,91 +535,9 @@
             db = getFirestore(app);
             console.log("Firebase Online");
         } catch (e) {
-            console.warn("Грешка при инициализация на Firebase:", e);
+            console.warn("Firebase Error:", e);
             isMockMode = true;
-        }
-
-        // --- PRAYER TIMES ---
-        let prayerData = [];
-        async function fetchPrayerTimes() {
-            const loading = document.getElementById('loading-indicator');
-            const hijriEl = document.getElementById('hijri-date');
-            if(loading) loading.classList.remove('hidden');
-            try {
-                const lat = 41.5766; const lng = 23.7345; const date = new Date();
-                const url = `https://api.aladhan.com/v1/timings/${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13`;
-                const response = await fetch(url);
-                const data = await response.json();
-                if(data.code === 200) {
-                    const t = data.data.timings;
-                    const h = data.data.date.hijri;
-                    if(hijriEl) hijriEl.innerText = `${h.day} ${h.month.en} ${h.year} | ${data.data.date.readable}`;
-                    prayerData = [
-                        { name: "Имсак (Fajr)", time: t.Fajr, icon: "fa-cloud-sun" },
-                        { name: "Изгрев", time: t.Sunrise, icon: "fa-sun", isSun: true },
-                        { name: "Огле (Dhuhr)", time: t.Dhuhr, icon: "fa-sun" },
-                        { name: "Икиндѝ (Asr)", time: t.Asr, icon: "fa-cloud-sun" },
-                        { name: "Акшам (Maghrib)", time: t.Maghrib, icon: "fa-moon" },
-                        { name: "Ятсия (Isha)", time: t.Isha, icon: "fa-star" }
-                    ];
-                    renderPrayerTimes();
-                    updateAtmosphere(t);
-                }
-            } catch (error) { console.error("API Error:", error); } 
-            finally { if(loading) loading.classList.add('hidden'); }
-        }
-
-        function renderPrayerTimes() {
-            const list = document.getElementById('prayer-list');
-            if(!list) return;
-            const now = new Date();
-            const currentHours = now.getHours();
-            const currentMinutes = now.getMinutes();
-            let nextFound = false;
-            let html = '';
-            prayerData.forEach(p => {
-                const cleanTime = p.time.split(' ')[0]; 
-                const [h, m] = cleanTime.split(':').map(Number);
-                const isPast = (currentHours > h) || (currentHours === h && currentMinutes >= m);
-                let activeClass = '';
-                let statusIcon = '';
-                if (!nextFound && !isPast && !p.isSun) {
-                    activeClass = 'active';
-                    const nextName = document.getElementById('next-prayer-name');
-                    if(nextName) nextName.innerText = p.name.split(' ')[0];
-                    nextFound = true;
-                    statusIcon = '<span class="text-[#d4af37] text-xs font-bold animate-pulse">СЛЕДВА</span>';
-                    window.targetPrayerTime = new Date();
-                    window.targetPrayerTime.setHours(h, m, 0);
-                }
-                html += `
-                    <div class="prayer-row ${activeClass} flex justify-between items-center p-3 rounded hover:bg-white/5 transition">
-                        <div class="flex items-center gap-3">
-                            <i class="fas ${p.icon} w-6 text-center text-gray-400"></i>
-                            <span class="${activeClass ? 'text-white font-bold' : 'text-gray-300'}">${p.name}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            ${statusIcon}
-                            <span class="font-mono text-gray-200">${cleanTime}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            list.innerHTML = html;
-        }
-
-        function updateAtmosphere(times) {
-            const now = new Date();
-            const curMins = now.getHours() * 60 + now.getMinutes();
-            const parse = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-            const fajr = parse(times.Fajr);
-            const sunrise = parse(times.Sunrise);
-            const maghrib = parse(times.Maghrib);
-            const body = document.body;
-            body.classList.remove('theme-day', 'theme-night', 'theme-dawn');
-            if (curMins >= fajr && curMins < sunrise) { body.classList.add('theme-dawn'); } 
-            else if (curMins >= sunrise && curMins < maghrib) { body.classList.add('theme-day'); } 
-            else { body.classList.add('theme-night'); }
+            document.getElementById('system-status').innerText = "System: Offline (Mock)";
         }
 
         // --- Global Counter Logic ---
@@ -627,7 +546,8 @@
         function initGlobalCounter() {
             if(isMockMode || !db) return;
             
-            const docRef = doc(db, 'artifacts', appId_FS, 'public', 'data', 'tasbih', 'global_counter');
+            // STRICT PATH RULE: /artifacts/{appId}/public/data/{collectionName}
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'tasbih', 'global_counter');
             
             onSnapshot(docRef, (snapshot) => {
                 if (snapshot.exists()) {
@@ -636,19 +556,22 @@
                     updateZikrDisplay();
                 }
             }, (error) => {
-                console.error("Error listening to global counter:", error);
+                console.error("Counter Listen Error:", error);
+                // If permission denied, check Firestore Rules
             });
         }
         
         async function incrementGlobalCounter() {
             if(isMockMode || !db) return;
-            const docRef = doc(db, 'artifacts', appId_FS, 'public', 'data', 'tasbih', 'global_counter');
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'tasbih', 'global_counter');
             
+            // Require Auth for write
             if (!auth.currentUser) return;
 
             try {
                 await updateDoc(docRef, { count: increment(1) });
             } catch (e) {
+                // If doc missing, create it
                 await setDoc(docRef, { count: increment(1) }, { merge: true });
             }
         }
@@ -671,9 +594,12 @@
         document.getElementById('btn-zikr').addEventListener('click', (e) => {
             localCount++;
             localStorage.setItem('zikr_' + currentUserId, localCount);
+            
             incrementGlobalCounter();
             if(isMockMode) communityCount++;
+            
             updateZikrDisplay();
+
             const circle = document.createElement('div');
             circle.classList.add('ripple-effect');
             circle.style.width = circle.style.height = '100px';
@@ -695,7 +621,10 @@
                 const aiFab = document.getElementById('ai-fab');
                 if (aiFab && apiKey) aiFab.classList.remove('hidden-view');
                 else if (aiFab) aiFab.classList.add('hidden-view');
+                
                 userDisplay.textContent = email.split('@')[0];
+                document.getElementById('system-status').innerText = "Система: Онлайн";
+                
                 fetchPrayerTimes();
                 renderEvents();
                 loadUserZikr();
@@ -715,11 +644,13 @@
                     const displayName = user.isAnonymous ? "Гост" : user.email;
                     switchView(true, displayName);
                 } else {
-                    signInAnonymously(auth).catch((error) => {
-                         console.warn("Auto-guest login failed", error);
-                    });
+                    // Auto-login guest
+                    signInAnonymously(auth).catch((error) => console.warn("Auto-guest failed", error));
                 }
             });
+        } else {
+             // Fallback for mock mode
+             if(isMockMode) switchView(false); 
         }
 
         async function handleAuthAction(actionType) {
@@ -784,6 +715,66 @@
             return new Blob([view], { type: 'audio/wav' });
         }
         
+        let generatedDuaAudioUrl = null;
+
+        async function generateTtsAudio(text) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: `Прочети тържествено следната молитва на български: ${text}` }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } }
+                }
+            };
+
+            const btn = document.getElementById('btn-play-dua');
+            const textEl = document.getElementById('dua-audio-text');
+            btn.disabled = true;
+            textEl.innerText = 'Зареждане...';
+            if (generatedDuaAudioUrl) URL.revokeObjectURL(generatedDuaAudioUrl);
+            generatedDuaAudioUrl = null;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error('TTS API Error');
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+                if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                    const rateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000; 
+                    const pcmData = base64ToArrayBuffer(audioData);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    generatedDuaAudioUrl = URL.createObjectURL(wavBlob);
+                    textEl.innerText = 'Слушай Дуата';
+                    btn.disabled = false;
+                } else { throw new Error("Invalid audio response structure."); }
+            } catch (error) {
+                console.error("TTS Error:", error);
+                textEl.innerText = 'Грешка при аудиото';
+                btn.disabled = true;
+            }
+        }
+
+        window.playGeneratedDua = () => {
+            if (generatedDuaAudioUrl) {
+                const audioEl = new Audio(generatedDuaAudioUrl);
+                const btn = document.getElementById('btn-play-dua');
+                const textEl = document.getElementById('dua-audio-text');
+                btn.disabled = true;
+                textEl.innerText = 'Пускане...';
+                audioEl.play();
+                audioEl.onended = () => { btn.disabled = false; textEl.innerText = 'Слушай Дуата'; };
+                audioEl.onerror = () => { btn.disabled = false; textEl.innerText = 'Грешка при пускане'; };
+            }
+        }
+        
         window.switchAiTab = (tab) => {
             const chatTab = document.getElementById('ai-tab-chat');
             const duaTab = document.getElementById('ai-tab-dua');
@@ -800,24 +791,142 @@
             }
         }
 
-        window.openModal = (id) => document.getElementById('modal-' + id).classList.remove('hidden');
-        window.closeModal = (id) => document.getElementById('modal-' + id).classList.add('hidden');
-        window.shareLink = () => {
-            const baseUrl = window.location.href.split('?')[0];
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(baseUrl).then(() => showToast("Линкът е копиран!"));
-            }
-        };
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('hidden', 'translate-y-10');
-            setTimeout(() => {
-                toast.classList.add('translate-y-10');
-                setTimeout(() => toast.classList.add('hidden'), 300);
-            }, 3000);
+        // --- GEMINI CHAT ---
+        async function callGemini(userPrompt, systemInstruction) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+            try {
+                const response = await fetch(url, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                if(!response.ok) throw new Error('API Error');
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Съжалявам, възникна грешка.";
+            } catch (error) { return "Моля проверете връзката си или опитайте по-късно."; }
         }
 
+        window.sendChatMessage = async () => {
+            const input = document.getElementById('chat-input');
+            const history = document.getElementById('chat-history');
+            const msg = input.value.trim();
+            if(!msg) return;
+            history.innerHTML += `<div class="ai-message-bubble user">${msg}</div>`;
+            input.value = '';
+            history.scrollTop = history.scrollHeight;
+            const loadingId = 'loading-' + Date.now();
+            history.innerHTML += `<div id="${loadingId}" class="ai-message-bubble bot"><i class="fas fa-circle-notch fa-spin"></i></div>`;
+            history.scrollTop = history.scrollHeight;
+            const systemPrompt = "Ти си мъдър и знаещ помощник в джамията на село Лъжница, България. Отговаряй на въпроси за исляма, молитвата и общността с уважение, кратко и на български език. Използвай мек и насърчителен тон.";
+            const response = await callGemini(msg, systemPrompt);
+            document.getElementById(loadingId).remove();
+            history.innerHTML += `<div class="ai-message-bubble bot">${response}</div>`;
+            history.scrollTop = history.scrollHeight;
+        };
+
+        window.generateDua = async () => {
+            const input = document.getElementById('dua-input');
+            const btn = document.getElementById('btn-generate-dua');
+            const resultBox = document.getElementById('dua-result');
+            const resultText = document.getElementById('dua-text');
+            const btnPlay = document.getElementById('btn-play-dua');
+            const topic = input.value.trim();
+            if(!topic) return;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Генериране...';
+            btnPlay.disabled = true;
+            resultBox.classList.add('hidden');
+            const systemPrompt = "Генерирай кратка, искрена ислямска молитва (Дуа) на български език за човек, който преживява следното. Включи транслитерация на подходяща арабска фраза, ако е уместно. Бъди съпричастен.";
+            const response = await callGemini(topic, systemPrompt);
+            btn.disabled = false;
+            btn.innerHTML = '<span>✨ Генерирай Дуа</span>';
+            resultText.innerText = response;
+            resultBox.classList.remove('hidden');
+            await generateTtsAudio(response);
+        };
+
+        // --- PRAYER TIMES ---
+        let prayerData = [];
+        async function fetchPrayerTimes() {
+            const loading = document.getElementById('loading-indicator');
+            const hijriEl = document.getElementById('hijri-date');
+            if(loading) loading.classList.remove('hidden');
+            try {
+                const lat = 41.5766; const lng = 23.7345; const date = new Date();
+                const url = `https://api.aladhan.com/v1/timings/${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13`;
+                const response = await fetch(url);
+                const data = await response.json();
+                if(data.code === 200) {
+                    const t = data.data.timings;
+                    const h = data.data.date.hijri;
+                    hijriEl.innerText = `${h.day} ${h.month.en} ${h.year} | ${data.data.date.readable}`;
+                    prayerData = [
+                        { name: "Имсак (Fajr)", time: t.Fajr, icon: "fa-cloud-sun" },
+                        { name: "Изгрев", time: t.Sunrise, icon: "fa-sun", isSun: true },
+                        { name: "Огле (Dhuhr)", time: t.Dhuhr, icon: "fa-sun" },
+                        { name: "Икиндѝ (Asr)", time: t.Asr, icon: "fa-cloud-sun" },
+                        { name: "Акшам (Maghrib)", time: t.Maghrib, icon: "fa-moon" },
+                        { name: "Ятсия (Isha)", time: t.Isha, icon: "fa-star" }
+                    ];
+                    renderPrayerTimes();
+                    updateAtmosphere(t);
+                }
+            } catch (error) { console.error("API Error:", error); } 
+            finally { if(loading) loading.classList.add('hidden'); }
+        }
+        function renderPrayerTimes() {
+            const list = document.getElementById('prayer-list');
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            let nextFound = false;
+            let html = '';
+            prayerData.forEach(p => {
+                const cleanTime = p.time.split(' ')[0]; 
+                const [h, m] = cleanTime.split(':').map(Number);
+                const isPast = (currentHours > h) || (currentHours === h && currentMinutes >= m);
+                let activeClass = '';
+                let statusIcon = '';
+                if (!nextFound && !isPast && !p.isSun) {
+                    activeClass = 'active';
+                    document.getElementById('next-prayer-name').innerText = p.name.split(' ')[0];
+                    nextFound = true;
+                    statusIcon = '<span class="text-[#d4af37] text-xs font-bold animate-pulse">СЛЕДВА</span>';
+                    window.targetPrayerTime = new Date();
+                    window.targetPrayerTime.setHours(h, m, 0);
+                }
+                html += `
+                    <div class="prayer-row ${activeClass} flex justify-between items-center p-3 rounded hover:bg-white/5 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fas ${p.icon} w-6 text-center text-gray-400"></i>
+                            <span class="${activeClass ? 'text-white font-bold' : 'text-gray-300'}">${p.name}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${statusIcon}
+                            <span class="font-mono text-gray-200">${cleanTime}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+        function updateAtmosphere(times) {
+            const now = new Date();
+            const curMins = now.getHours() * 60 + now.getMinutes();
+            const parse = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+            const fajr = parse(times.Fajr);
+            const sunrise = parse(times.Sunrise);
+            const maghrib = parse(times.Maghrib);
+            const body = document.body;
+            body.classList.remove('theme-day', 'theme-night', 'theme-dawn');
+            if (curMins >= fajr && curMins < sunrise) { body.classList.add('theme-dawn'); } 
+            else if (curMins >= sunrise && curMins < maghrib) { body.classList.add('theme-day'); } 
+            else { body.classList.add('theme-night'); }
+        }
+
+        // --- EVENTS LOGIC ---
         function getNextDayOfWeek(date, dayOfWeek) {
             const resultDate = new Date(date.getTime());
             resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
@@ -851,6 +960,25 @@
                 </li>
             `;
             document.getElementById('events-list').innerHTML = html;
+        }
+
+        // --- UI UTILS ---
+        window.openModal = (id) => document.getElementById('modal-' + id).classList.remove('hidden');
+        window.closeModal = (id) => document.getElementById('modal-' + id).classList.add('hidden');
+        window.shareLink = () => {
+            const baseUrl = window.location.href.split('?')[0];
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(baseUrl).then(() => showToast("Линкът е копиран!"));
+            }
+        };
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden', 'translate-y-10');
+            setTimeout(() => {
+                toast.classList.add('translate-y-10');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3000);
         }
 
         setInterval(() => {
